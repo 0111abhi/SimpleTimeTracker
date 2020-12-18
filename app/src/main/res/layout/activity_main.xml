@@ -29,6 +29,21 @@
 
             <EditText
                 android:id="@+id/tasksInput" />
+
+
+        </TableRow>
+
+        <TableRow android:layout_width="match_parent"
+            >
+
+            <TextView
+                android:id="@+id/categoryView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category" />
+
+            <EditText
+                android:id="@+id/categoryInput" />
         </TableRow>
 
 <TableRow android:layout_width="match_parent">
