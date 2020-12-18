@@ -46,8 +46,8 @@ public class TaskStatsActivity extends AppCompatActivity {
     {
         SQLiteDatabase reader = db.getReadableDatabase();
         String[] projection = {TasksDataContract.TasksEntry.KEY_STARTTIME, TasksDataContract.TasksEntry.KEY_ENDTIME, TasksDataContract.TasksEntry.KEY_TASK};
-        Cursor cursor = reader.rawQuery("SELECT task, SUM(strftime(\"%s\", end_time) - strftime(\"%s\", start_time))/60 AS MinutesSpent, SUM(strftime(\"%s\", end_time) - strftime(\"%s\", start_time))/3600.0 AS HoursSpent FROM TasksTime WHERE start_time > date('now', '-7 day') GROUP BY LOWER(task) ORDER BY MinutesSpent DESC", new String[] {});
-        DisplayTable(cursor, new String[] {"Task", "MinutesSpent", "HoursSpent"}, 3);
+        Cursor cursor = reader.rawQuery("SELECT task, ROUND(SUM(strftime(\"%s\", end_time) - strftime(\"%s\", start_time))/3600.0, 2) AS HoursSpent FROM TasksTime WHERE start_time > date('now', '-7 day') GROUP BY LOWER(task) ORDER BY HoursSpent DESC", new String[] {});
+        DisplayTable(cursor, new String[] {"Task", "HoursSpent"}, 2);
     }
 
     void DisplayTable(Cursor cursor, String[] headers, int columns)
