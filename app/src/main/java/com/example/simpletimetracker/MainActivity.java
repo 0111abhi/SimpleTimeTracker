@@ -9,13 +9,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAmount;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -30,11 +34,52 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         db = new TaskDataBaseHandler(this);
+
+        AutoCompleteTextView inputTask = (AutoCompleteTextView)findViewById(R.id.tasksInput);
+        ArrayAdapter<String> adapterTask = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getTaskSuggestion());
+        inputTask.setAdapter(adapterTask);
+        inputTask.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                inputTask.showDropDown();
+                return false;
+            }
+        });
+
+        AutoCompleteTextView categoryInput = (AutoCompleteTextView)findViewById(R.id.categoryInput);
+        categoryInput.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                ArrayList<String> categorySuggestions = getCategorySuggestion(inputTask.getText().toString());
+                if(categorySuggestions.size() > 0)
+                    categoryInput.setText(categorySuggestions.get(0));
+                ArrayAdapter<String> adapterTask = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_list_item_1, categorySuggestions);
+                categoryInput.setAdapter(adapterTask);
+                categoryInput.showDropDown();
+                return false;
+            }
+        });
+    }
+
+
+    private void PopulateAutoSuggestData(int input, ArrayList<String> suggestion)
+    {
+        AutoCompleteTextView inputTask = (AutoCompleteTextView)findViewById(input);
+        ArrayAdapter<String> adapterTask = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, suggestion);
+        inputTask.setAdapter(adapterTask);
+        inputTask.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                inputTask.showDropDown();
+                return false;
+            }
+        });
     }
 
     public void saveData(View view){
-        EditText inputTask = (EditText)findViewById(R.id.tasksInput);
+        AutoCompleteTextView inputTask = (AutoCompleteTextView)findViewById(R.id.tasksInput);
         String task = inputTask.getText().toString();
+
 
         EditText inputCategory = (EditText)findViewById(R.id.categoryInput);
         String category = inputCategory.getText().toString();
@@ -135,5 +180,33 @@ public class MainActivity extends AppCompatActivity {
         b.putString("statsType", "weekly");
         intent.putExtras(b);
         startActivity(intent);
+    }
+
+    private ArrayList<String> getTaskSuggestion(){
+        SQLiteDatabase reader = db.getReadableDatabase();
+        // Get all task for today
+        Cursor cursor = reader.rawQuery("select COUNT(task) AS TaskCnt, task from taskstime where date(end_time) > date('now', '-7 days') GROUP BY task ORDER BY TaskCnt DESC", new String[] {});
+        ArrayList<String> suggestion = new ArrayList<>();
+        if(cursor != null)
+            cursor.moveToFirst();
+        while(!cursor.isAfterLast()) {
+           suggestion.add(cursor.getString(1));
+            cursor.moveToNext();
+        }
+        return suggestion;
+    }
+
+    private ArrayList<String> getCategorySuggestion(String inputTask){
+        SQLiteDatabase reader = db.getReadableDatabase();
+        // Get all task for today
+        Cursor cursor = reader.rawQuery("select COUNT(category) AS CategoryCnt, Category from taskstime where date(end_time) > date('now', '-7 days') AND task LIKE ? GROUP BY task ORDER BY CategoryCnt, task DESC", new String[] {inputTask});
+        ArrayList<String> suggestion = new ArrayList<>();
+        if(cursor != null)
+            cursor.moveToFirst();
+        while(!cursor.isAfterLast()) {
+            suggestion.add(cursor.getString(1));
+            cursor.moveToNext();
+        }
+        return suggestion;
     }
 }
