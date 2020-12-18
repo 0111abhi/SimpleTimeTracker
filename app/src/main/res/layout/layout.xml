@@ -6,18 +6,21 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:stretchColumns="0,1">
+        android:stretchColumns="0,1"
+        >
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#A7C0DA">
+            android:background="#A7C0DA"
+            >
 
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/textView5"
@@ -53,12 +56,14 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:gravity="right"
-            android:paddingLeft="10">
+            android:background="@color/purple_500"
+            >
 
             <TableLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_span="3">
+                android:layout_span="3"
+                android:layout_gravity="center">
 
                 <TableRow
                     android:layout_width="match_parent"
