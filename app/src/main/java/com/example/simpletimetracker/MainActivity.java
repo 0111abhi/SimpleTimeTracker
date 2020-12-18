@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         EditText inputTask = (EditText)findViewById(R.id.tasksInput);
         String task = inputTask.getText().toString();
 
+        EditText inputCategory = (EditText)findViewById(R.id.categoryInput);
+        String category = inputCategory.getText().toString();
+
         TimePicker startTime =(TimePicker)findViewById(R.id.startTime);
         TimePicker endTime = (TimePicker)findViewById(R.id.endTime);
         boolean isValid = CheckForValidtiy(task, startTime, endTime);
@@ -61,8 +64,10 @@ public class MainActivity extends AppCompatActivity {
         values.put(TasksDataContract.TasksEntry.KEY_STARTTIME, startDate.toString());
         values.put(TasksDataContract.TasksEntry.KEY_ENDTIME, endDate.toString());
         values.put(TasksDataContract.TasksEntry.KEY_TASK, task);
+        values.put(TasksDataContract.TasksEntry.KEY_CATEGORY, category);
         long newRowId = dbWrite.insert(TasksDataContract.TasksEntry.TABLE_NAME, null, values);
         inputTask.setText("");
+        inputCategory.setText("");
     }
 
     private boolean CheckForValidtiy(String task, TimePicker startTime, TimePicker endTime)

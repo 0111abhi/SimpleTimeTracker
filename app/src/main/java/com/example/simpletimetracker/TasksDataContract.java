@@ -10,5 +10,6 @@ public final class TasksDataContract {
         public static final String KEY_STARTTIME = "start_time";
         public static final String KEY_ENDTIME = "end_time";
         public static final String KEY_TASK = "task";
+        public static final String KEY_CATEGORY = "category";
     }
 }
