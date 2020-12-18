@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="Task" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/tasksInput" />
 
 
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:text="Category" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/categoryInput" />
         </TableRow>
 
