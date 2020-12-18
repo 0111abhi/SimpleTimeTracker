@@ -200,9 +200,11 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase reader = db.getReadableDatabase();
         // Get all task for today
         Cursor cursor = reader.rawQuery("select COUNT(category) AS CategoryCnt, Category from taskstime where date(end_time) > date('now', '-7 days') AND task LIKE ? GROUP BY task ORDER BY CategoryCnt, task DESC", new String[] {inputTask});
-        ArrayList<String> suggestion = new ArrayList<>();
+        if(cursor == null || cursor.getCount() == 0)
+            cursor = reader.rawQuery("select COUNT(category) AS CategoryCnt, Category from taskstime where date(end_time) > date('now', '-7 days') GROUP BY category ORDER BY CategoryCnt DESC", new String[] {});
         if(cursor != null)
             cursor.moveToFirst();
+        ArrayList<String> suggestion = new ArrayList<>();
         while(!cursor.isAfterLast()) {
             suggestion.add(cursor.getString(1));
             cursor.moveToNext();

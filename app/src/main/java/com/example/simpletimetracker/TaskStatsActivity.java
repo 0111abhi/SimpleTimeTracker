@@ -188,7 +188,7 @@ public class TaskStatsActivity extends AppCompatActivity {
     private TableLayout CreateSubTable(String category, String[] headers)
     {
         SQLiteDatabase reader = db.getReadableDatabase();
-        Cursor cursor = reader.rawQuery("SELECT task, ROUND(SUM(strftime(\"%s\", end_time) - strftime(\"%s\", start_time))/3600.0, 2) AS HoursSpent FROM TasksTime WHERE start_time > date('now', '-7 day') AND category = ? GROUP BY LOWER(task) ORDER BY HoursSpent DESC", new String[] {category});
+        Cursor cursor = reader.rawQuery("SELECT task, ROUND(SUM(strftime(\"%s\", end_time) - strftime(\"%s\", start_time))/3600.0, 2) AS HoursSpent FROM TasksTime WHERE start_time > date('now', '-7 day') AND LOWER(category) = LOWER(?) GROUP BY LOWER(task) ORDER BY HoursSpent DESC", new String[] {category});
         return DisplayTable(cursor, headers);
     }
 
