@@ -43,7 +43,7 @@ public class TaskStatsActivity extends AppCompatActivity {
     {
         SQLiteDatabase reader = db.getReadableDatabase();
         String[] projection = {TasksDataContract.TasksEntry.KEY_STARTTIME, TasksDataContract.TasksEntry.KEY_ENDTIME, TasksDataContract.TasksEntry.KEY_TASK};
-        Cursor cursor = reader.rawQuery("SELECT strftime('%m/%d', start_time) AS Date, strftime('%H : %M', start_time) AS StartTime, strftime('%H : %M', end_time) AS end_time, category, task FROM TasksTime WHERE start_time > date('now', '-1 day') ORDER BY start_time DESC", new String[] {});
+        Cursor cursor = reader.rawQuery("SELECT strftime('%m/%d', start_time) AS Date, strftime('%H : %M', start_time) AS StartTime, strftime('%H : %M', end_time) AS end_time, category, task FROM TasksTime WHERE start_time > date('now', '-1 day', 'localtime') ORDER BY start_time DESC", new String[] {});
 
         TableLayout table = DisplayTable(cursor, new String[] {"Date", "StartTime", "EndTime", "Category", "Task"});
         LinearLayout mainLayout = this.findViewById(R.id.taskStats);
@@ -54,7 +54,7 @@ public class TaskStatsActivity extends AppCompatActivity {
     {
         SQLiteDatabase reader = db.getReadableDatabase();
         String[] projection = {TasksDataContract.TasksEntry.KEY_STARTTIME, TasksDataContract.TasksEntry.KEY_ENDTIME, TasksDataContract.TasksEntry.KEY_TASK};
-        Cursor cursor = reader.rawQuery("SELECT category, ROUND(SUM(strftime(\"%s\", end_time) - strftime(\"%s\", start_time))/3600.0, 2) AS HoursSpent FROM TasksTime WHERE start_time > date('now', '-7 day') GROUP BY LOWER(category) ORDER BY HoursSpent DESC", new String[] {});
+        Cursor cursor = reader.rawQuery("SELECT category, ROUND(SUM(strftime(\"%s\", end_time) - strftime(\"%s\", start_time))/3600.0, 2) AS HoursSpent FROM TasksTime WHERE start_time > date('now', '-7 day', 'localtime') GROUP BY LOWER(category) ORDER BY HoursSpent DESC", new String[] {});
         DisplayWeeklyStatusTable(cursor, new String[] {"Category", "Total Hours"});
     }
 

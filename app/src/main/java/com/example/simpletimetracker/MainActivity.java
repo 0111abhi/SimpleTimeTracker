@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
     {
         SQLiteDatabase reader = db.getReadableDatabase();
         // Get all task times for today
-        Cursor cursor = reader.rawQuery("SELECT strftime('%H', start_time) AS StartTimeHour,strftime('%M', start_time) AS StartTimeMins, strftime('%H', end_time) AS EndTimeHour, strftime('%M', end_time) AS EndTimeMins FROM TasksTime WHERE date(start_time) == date('now') ORDER BY start_time DESC", new String[] {});
+        Cursor cursor = reader.rawQuery("SELECT strftime('%H', start_time) AS StartTimeHour,strftime('%M', start_time) AS StartTimeMins, strftime('%H', end_time) AS EndTimeHour, strftime('%M', end_time) AS EndTimeMins FROM TasksTime WHERE date(start_time) > date('now', 'localtime') ORDER BY start_time DESC", new String[] {});
         if(cursor != null)
             cursor.moveToFirst();
         while(!cursor.isAfterLast()) {
