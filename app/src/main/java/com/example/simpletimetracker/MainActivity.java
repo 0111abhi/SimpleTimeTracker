@@ -190,6 +190,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void inputView(View view){
+        Intent intent = new Intent(this, day_view_input.class);
+        Bundle b = new Bundle();
+        b.putString("statsType", "weekly");
+        intent.putExtras(b);
+        startActivity(intent);
+    }
+
     private ArrayList<String> getTaskSuggestion(){
         SQLiteDatabase reader = db.getReadableDatabase();
         // Get all task for today
