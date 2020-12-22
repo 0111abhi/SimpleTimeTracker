@@ -10,8 +10,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,8 +35,8 @@ public class day_view extends AppCompatActivity {
     {
         db = new TaskDataBaseHandler(this);
         TableLayout tableLayout = new TableLayout(this);
+        tableLayout.setColumnStretchable(1,true);
         tableLayout.setColumnStretchable(2,true);
-        tableLayout.setColumnStretchable(3,true);
 
         SQLiteDatabase reader = db.getReadableDatabase();
         Cursor cursor = reader.rawQuery(ResourceUrl.READ_TODAY_ROWS_SQL,new String[]{});
@@ -73,12 +75,33 @@ public class day_view extends AppCompatActivity {
             int height = calculateHeight(task.startTime, task.endTime);
             TableRow.LayoutParams params = new TableRow.LayoutParams(50,height);
             //row.setLayoutParams(params);
-            addValuesInRow(row, String.valueOf(task.startTime),100, height);
-            addValuesInRow(row, String.valueOf(task.endTime),100, height);
+            String time = formatTime(task.startTime, task.endTime);
+            addValuesInRow(row, time,100, height);
             addValuesInRow(row, task.taskDescription,200, height);
             addValuesInRow(row, task.category,200, height);
             tableLayout.addView(row);
         }
+    }
+
+    private String formatTime(int startTime, int endTime) {
+        String tempStartTime = convertToString(startTime);
+        String tempEndTime = convertToString(endTime);
+
+        return tempStartTime +" - "+tempEndTime;
+    }
+
+    private String convertToString(int time){
+        int hours = time/60;
+        int minutes = time%60;
+        String tempHour=String.valueOf(hours);
+        String tempMin=String.valueOf(minutes);
+        if (hours <10){
+            tempHour = '0'+tempHour;
+        }
+        if (minutes<10){
+            tempMin ='0'+ tempMin;
+        }
+        return tempHour+":"+tempMin;
     }
 
     private int calculateHeight(int startTime, int endTime) {
